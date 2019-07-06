@@ -1,7 +1,7 @@
 /**
  * 请求路径处理文件
  */
-import { isDate, isObject } from './util'
+import { isDate, isPlainObject } from './util'
 
 // 转义，有一些字符还需要再转义回来
 function encode(val: string): string {
@@ -46,7 +46,7 @@ export function buildURL(url: string, params?: any): string {
     vals.forEach(val => {
       if (isDate(val)) {
         val = val.toISOString()
-      } else if (isObject(val)) {
+      } else if (isPlainObject(val)) {
         val = JSON.stringify(val)
       }
       parts.push(`${encode(key)}=${encode(val)}`)

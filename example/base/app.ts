@@ -1,5 +1,8 @@
 import axios from '../../src/index'
 
+/**
+ * GET
+ */
 axios({
   method: 'get',
   url: '/base/get',
@@ -60,3 +63,42 @@ axios({
   }
 })
 
+/**
+ * POST
+ */
+axios({
+  method: 'post',
+  url: '/base/post',
+  data: {
+    a: 1,
+    b: 2
+  }
+})
+
+axios({
+  method: 'post',
+  url: '/base/post',
+  headers: {
+    'content-type': 'application/json',
+    'accept': 'application/json, text/plain, */*'
+  },
+  data: {
+    a: 1,
+    b: 2
+  }
+})
+
+const paramsString = "q=URLUtils.searchParams&topic=api"
+const searchParams = new URLSearchParams(paramsString) // 查询字符串对象 "[object URLSearchParams]"，浏览器会自动设置合适的 content-type 为 application/x-www-form-urlencoded;charset=UTF-8（覆盖掉我们自己设置的值），formData 等类型同理
+axios({
+  method: 'post',
+  url: '/base/post',
+  data: searchParams
+})
+
+const arr = new Int32Array([23, 31]) // 二进制数据 "[object Int32Array]"
+axios({
+  method: 'post',
+  url: '/base/buffer',
+  data: arr
+})
