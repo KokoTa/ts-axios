@@ -1,3 +1,7 @@
+/**
+ * 类型声明文件
+ */
+
 export type Method =
   | 'get'
   | 'GET'
