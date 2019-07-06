@@ -30,6 +30,11 @@ router.get('/simple/get', (req, res) => {
     msg: 'Hello'
   })
 })
+router.get('/base/get', (req, res) => {
+  res.json({
+    msg: req.query
+  })
+})
 
 app.use(router)
 
