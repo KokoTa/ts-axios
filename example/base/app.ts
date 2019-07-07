@@ -102,3 +102,33 @@ axios({
   url: '/base/buffer',
   data: arr
 })
+
+/**
+ * Promise
+ */
+axios({
+  method: 'post',
+  url: '/base/post',
+  data: {
+    a: 1,
+    b: 2
+  }
+}).then((res) => {
+  console.log(res)
+}).catch((err) => {
+  console.log(err)
+})
+
+axios({
+  method: 'post',
+  url: '/base/post',
+  responseType: 'json', // 设置返回数据的类型
+  data: {
+    a: 1,
+    b: 2
+  }
+}).then((res) => {
+  console.log(res)
+}).catch((err) => {
+  console.log(err)
+})

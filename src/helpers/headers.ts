@@ -14,14 +14,32 @@ function normalizeHeaderName (headers: any, normalizedName: string): void {
   })
 }
 
+// 设置 content-type 为 json
 export function processHeaders (headers: any, data: any): any {
   normalizeHeaderName(headers, 'Content-Type')
 
-  if (isPlainObject(data)) { // 如果是数据是对象，就设置 type 为 json
+  if (isPlainObject(data)) {
     if (headers && !headers['Content-Type']) {
       headers['Content-Type'] = 'application/json;charset=utf-8'
     }
   }
 
   return headers
+}
+
+
+// 将 string header 转换成 key-value 格式
+export function parseHeaders (headers: string): any {
+  let parsed = Object.create(null)
+  if (!headers) return parsed
+
+  headers.split('\r\n').forEach((line) => {
+    let [key, val] = line.split(':')
+    if (!key || !val) return
+    key = key.trim().toLowerCase()
+    val = val.trim()
+    parsed[key] = val
+  })
+
+  return parsed
 }
