@@ -1,4 +1,4 @@
-import axios from '../../src/index'
+import axios, { AxiosError } from '../../src/index'
 
 /**
  * GET
@@ -116,7 +116,7 @@ axios({
 }).then((res) => {
   console.log(res)
 }).catch((err) => {
-  console.log(err)
+  console.error(err)
 })
 
 axios({
@@ -130,5 +130,52 @@ axios({
 }).then((res) => {
   console.log(res)
 }).catch((err) => {
-  console.log(err)
+  console.error(err)
+})
+
+/**
+ * Error
+ */
+
+// 返回错误码
+axios({
+  method: 'get',
+  url: '/base/error'
+}).then((res) => {
+  console.log(res)
+}).catch((err) => {
+  console.error(err)
+})
+
+// 网络错误，这里设置一个 5s 的定时器，在 5s 内通过 chrome 控制台选择 offline 模式，使 5s 后的请求失败
+// setTimeout(() => {
+//   axios({
+//     method: 'get',
+//     url: '/base/error'
+//   }).then((res) => {
+//     console.log(res)
+//   }).catch((err) => {
+//     console.error(err)
+//   })
+// }, 5000);
+
+// 请求未超时
+axios({
+  method: 'get',
+  url: '/base/timeout'
+}).then((res) => {
+  console.log(res)
+}).catch((err) => {
+  console.error(err)
+})
+
+// 请求超时
+axios({
+  method: 'get',
+  url: '/base/timeout',
+  timeout: 1000
+}).then((res) => {
+  console.log(res)
+}).catch((err: AxiosError) => {
+  console.error(err.message)
 })

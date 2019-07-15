@@ -22,9 +22,10 @@ export interface AxiosRequestConfig {
   url: string
   method?: Method
   data?: any
-  params?: any,
-  headers?: any,
+  params?: any
+  headers?: any
   responseType?: XMLHttpRequestResponseType // TS 自带的类型
+  timeout?: number
 }
 
 export interface AxiosResponse {
@@ -37,6 +38,12 @@ export interface AxiosResponse {
 }
 
 // 使用 Promise 泛型接口，指定 resolve 出来的数据为 AxiosResponse
-export interface AxiosPromise extends Promise<AxiosResponse> {
+export interface AxiosPromise extends Promise<AxiosResponse> {}
 
+export interface AxiosError extends Error {
+  isAxiosError: boolean
+  config: AxiosRequestConfig
+  code?: string | null
+  request?: any
+  response?: AxiosResponse
 }

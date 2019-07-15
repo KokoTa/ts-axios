@@ -31,6 +31,7 @@ router.get('/simple/get', (req, res) => {
     msg: 'Hello'
   })
 })
+
 router.get('/base/get', (req, res) => {
   res.json({
     msg: req.query
@@ -52,6 +53,25 @@ router.post('/base/buffer', (req, res) => {
     let buf = Buffer.concat(msg)
     res.json(buf.toJSON())
   })
+})
+router.get('/base/error', (req, res) => {
+  if (Math.random() > 0.5) {
+    res.json({
+      msg: 'good error request'
+    })
+  } else {
+    res.status(500)
+    res.json({
+      msg: 'bad error requeest'
+    })
+  }
+})
+router.get('/base/timeout', (req, res) => {
+  setTimeout(() => {
+    res.json({
+      msg: 'good timeout request'
+    })
+  }, 3000)
 })
 
 app.use(router)
