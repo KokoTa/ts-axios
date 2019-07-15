@@ -3,6 +3,10 @@
  */
 import { isPlainObject } from './util'
 
+/**
+ * 转为 json 字符串
+ * @param data 发送的数据
+ */
 export function transformRequest (data: any): any {
   if (isPlainObject(data)) {
     return JSON.stringify(data)
@@ -10,6 +14,10 @@ export function transformRequest (data: any): any {
   return data
 }
 
+/**
+ * 转为 json 对象
+ * @param data 接收的数据
+ */
 export function transformResponse (data: any): any {
   if (typeof data === 'string') {
     try {

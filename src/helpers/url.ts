@@ -3,7 +3,10 @@
  */
 import { isDate, isPlainObject } from './util'
 
-// 转义，有一些字符还需要再转义回来
+/**
+ * 转义，有一些字符还需要再转义回来
+ * @param val 需要转义的值
+ */
 function encode(val: string): string {
   // encodeURIComponent 转义除了字母、数字、(、)、.、!、~、*、'、-和_之外的所有字
   return encodeURIComponent(val)
@@ -35,7 +38,7 @@ export function buildURL(url: string, params?: any): string {
       return
     }
 
-    // 如果值不为空，那就赋为数组形式
+    // 如果值不为空
     let vals = []
     if (Array.isArray(val)) {
       vals = val

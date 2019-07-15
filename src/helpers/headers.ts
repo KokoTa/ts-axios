@@ -3,7 +3,11 @@
  */
 import { isPlainObject } from './util'
 
-// 规范大小写
+/**
+ * 规范请求头名称
+ * @param headers 请求头对象
+ * @param normalizedName 请求头名称
+ */
 function normalizeHeaderName (headers: any, normalizedName: string): void {
   if (!headers) return
   Object.keys(headers).forEach((name) => {
@@ -14,7 +18,11 @@ function normalizeHeaderName (headers: any, normalizedName: string): void {
   })
 }
 
-// 设置 content-type 为 json
+/**
+ * 规范化请求头
+ * @param headers 请求头对象
+ * @param data 发送的数据
+ */
 export function processHeaders (headers: any, data: any): any {
   normalizeHeaderName(headers, 'Content-Type')
 
@@ -28,7 +36,10 @@ export function processHeaders (headers: any, data: any): any {
 }
 
 
-// 将 string header 转换成 key-value 格式
+/**
+ * 将 string header 转换成 key-value 格式
+ * @param headers 请求头字符串
+ */
 export function parseHeaders (headers: string): any {
   let parsed = Object.create(null)
   if (!headers) return parsed
