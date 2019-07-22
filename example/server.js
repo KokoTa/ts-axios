@@ -112,6 +112,16 @@ router.patch('/extend/patch', (req, res) => {
     msg: req.body
   })
 })
+router.get('/extend/user', (req, res) => {
+  res.json({
+    code: 0,
+    messsage: 'ok',
+    result: {
+      name: 'Brain',
+      age: 24
+    }
+  })
+})
 
 app.use(router)
 

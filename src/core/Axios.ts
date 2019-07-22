@@ -2,7 +2,13 @@ import { AxiosRequestConfig, AxiosPromise, Method } from './../types/index';
 import dispatch from './dispatch';
 
 export default class Axios {
-  request(config: AxiosRequestConfig): AxiosPromise {
+  request(url: any, config?: any): AxiosPromise {
+    if (typeof url === 'string') { // 当请求参数有两个，即调用形式和 get/delete/head... 等一样
+      if (!config) config = {}
+      config.url = url
+    } else { // 当请求参数只有一个时，url 就是 config
+      config = url
+    }
     return dispatch(config)
   }
 
