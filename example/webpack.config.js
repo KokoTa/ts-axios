@@ -11,7 +11,8 @@ module.exports = {
   //     [
   //       'webpack-hot-middleware/client',
   //       'f:\\Github\\Program\\ts-axios\\example\\simple\\app.ts'
-  //     ]
+  //     ],
+  //   base: [...]
   // }
   entry: fs.readdirSync(__dirname).reduce((entries, dir) => {
     const entry = path.join(__dirname, dir, 'app.ts')

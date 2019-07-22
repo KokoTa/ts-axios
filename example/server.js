@@ -26,12 +26,18 @@ app.use(bodyParser.urlencoded({ extended: false }))
 
 const router = express.Router()
 
+/**
+ * Simple
+ */
 router.get('/simple/get', (req, res) => {
   res.json({
     msg: 'Hello'
   })
 })
 
+/**
+ * Base
+ */
 router.get('/base/get', (req, res) => {
   res.json({
     msg: req.query
@@ -72,6 +78,39 @@ router.get('/base/timeout', (req, res) => {
       msg: 'good timeout request'
     })
   }, 3000)
+})
+
+/**
+ * Extend
+ */
+router.get('/extend/get', (req, res) => {
+  res.json({
+    msg: 'get'
+  })
+})
+router.options('/extend/options', (req, res) => {
+  res.end()
+})
+router.delete('/extend/delete', (req, res) => {
+  res.end()
+})
+router.head('/extend/head', (req, res) => {
+  res.end()
+})
+router.post('/extend/post', (req, res) => {
+  res.json({
+    msg: req.body
+  })
+})
+router.put('/extend/put', (req, res) => {
+  res.json({
+    msg: req.body
+  })
+})
+router.patch('/extend/patch', (req, res) => {
+  res.json({
+    msg: req.body
+  })
 })
 
 app.use(router)

@@ -4,7 +4,7 @@
 import { isPlainObject } from './util'
 
 /**
- * 规范请求头名称
+ * 规范请求头名称(规范大小写)
  * @param headers 请求头对象
  * @param normalizedName 请求头名称
  */
