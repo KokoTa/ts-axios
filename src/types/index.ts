@@ -39,7 +39,7 @@ export interface AxiosResponse<T=any> {
   request: any
 }
 
-// 使用 Promise 泛型接口，指定 resolve 出来的数据为 AxiosResponse
+// 使用 Promise 泛型接口，指定 resolve 返回的数据为 AxiosResponse
 export interface AxiosPromise<T=any> extends Promise<AxiosResponse<T>> {}
 
 export interface AxiosError extends Error {
@@ -61,10 +61,29 @@ export interface Axios {
   post<T=any>(url: string, data?: any, config?: AxiosRequestConfig): AxiosPromise<T>
   put<T=any>(url: string, data?: any, config?: AxiosRequestConfig): AxiosPromise<T>
   patch<T=any>(url: string, data?: any, config?: AxiosRequestConfig): AxiosPromise<T>
+
+  interceptors: {
+    request: AxiosInterceptorManager<AxiosRequestConfig>,
+    response: AxiosInterceptorManager<AxiosResponse>
+  }
 }
 
 // Axios 默认可以调用自己，但也可以通过扩展接口调用
 export interface AxiosInstance extends Axios {
   <T=any>(config: AxiosRequestConfig): AxiosPromise<T>
   <T=any>(url: string, config?: AxiosRequestConfig): AxiosPromise<T>
+}
+
+export interface AxiosInterceptorManager<T> {
+  use(resolved: ResolvedFn<T>, rejected?: RejectedFn): number // 返回一个拦截器 id，用于拦截器的删除
+  eject(id: number): void
+}
+
+// 泛型类型可能是 AxiosRequestConfig 或者 AxiosResponse
+export interface ResolvedFn<T> {
+  (val: T): T | Promise<T>
+}
+
+export interface RejectedFn {
+  (error: any): any
 }

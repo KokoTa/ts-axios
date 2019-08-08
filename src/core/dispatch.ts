@@ -6,7 +6,7 @@ import { processHeaders } from '../helpers/headers'
 
 function processConfig(config: AxiosRequestConfig): void {
   const { url, params, data, headers = {} } = config
-  config.url = buildURL(url!, params) // 拼接请求路径
+  config.url = buildURL(url!, params) // 拼接请求路径，感叹号标识这个值一定不为空
   config.headers = processHeaders(headers, data) // 规范化请求头，这里处理头信息一定要放在处理数据之前
   config.data = transformRequest(data) // 尝试转换为 json
 }
