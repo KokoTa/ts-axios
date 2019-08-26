@@ -45,3 +45,34 @@ axios({
     }
   ]
 }).then((res) => console.log(res.data))
+
+/**
+ * create instance
+ */
+const config = {
+  transformRequest: [
+    function(data) {
+      return qs.stringify(data)
+    },
+    ...axios.defaults.transformRequest as AxiosTransformer[] // 该默认函数数组只有一个函数，作用是处理请求头
+  ],
+  transformResponse: [
+    ...axios.defaults.transformResponse as AxiosTransformer[], // 该默认函数数组只有一个函数，作用是解析 json 字符串
+    function(data) {
+      if (typeof data === 'object') {
+        data.b = 2
+      }
+      return data
+    }
+  ]
+}
+
+const instance = axios.create(config)
+
+instance({
+  url: '/config/post',
+  method: 'post',
+  data: {
+    a: 1
+  }
+}).then((res) => console.log(res.data))
