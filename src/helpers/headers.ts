@@ -21,10 +21,10 @@ function normalizeHeaderName(headers: any, normalizedName: string): void {
 
 /**
  * 规范化请求头
- * @param headers 请求头对象
  * @param data 发送的数据
+ * @param headers 请求头对象
  */
-export function processHeaders(headers: any, data: any): any {
+export function processHeaders(data: any, headers: any): any {
   normalizeHeaderName(headers, 'Content-Type')
 
   if (isPlainObject(data)) {
@@ -63,10 +63,10 @@ export function parseHeaders(headers: string): any {
 export function flatterHeaders(headers: any, method: Method) {
   if (!headers) return headers
 
-  // 先深拷贝所有请求头，然后再删除多余的请求头
+  // 先深拷贝所有键值对，然后过滤，只保留值为字符串的键值对；注意合并顺序
   headers = deepMerge(headers.common, headers[method], headers)
 
-  // 删掉 headers 中的子对象，只保留字符串值
+  // 删掉 headers 中的子对象，只保留值为字符串的键值对
   const methodsToDelete = ['get', 'post', 'put', 'delete', 'patch', 'head', 'options', 'common']
   methodsToDelete.forEach(method => {
     delete headers[method]

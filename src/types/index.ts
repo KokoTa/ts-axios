@@ -1,4 +1,5 @@
 import { get } from 'https'
+import { transformRequest } from '../helpers/data'
 
 /**
  * 类型声明文件
@@ -28,6 +29,8 @@ export interface AxiosRequestConfig {
   headers?: any
   responseType?: XMLHttpRequestResponseType // TS 自带的类型
   timeout?: number
+  transformRequest?: AxiosTransformer | AxiosTransformer[]
+  transformResponse?: AxiosTransformer | AxiosTransformer[]
 
   [propName: string]: any
 }
@@ -90,4 +93,8 @@ export interface ResolvedFn<T> {
 
 export interface RejectedFn {
   (error: any): any
+}
+
+export interface AxiosTransformer {
+  (data: any, headrs?: any): any
 }
