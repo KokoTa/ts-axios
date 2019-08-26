@@ -122,8 +122,21 @@ router.get('/extend/user', (req, res) => {
     }
   })
 })
+
+/**
+ * Interceptor
+ */
 router.get('/interceptor/get', (req, res) => {
   res.end('')
+})
+
+/**
+ * Config
+ */
+router.post('/config/post', (req, res) => {
+  res.json({
+    msg: req.body
+  })
 })
 
 app.use(router)

@@ -1,10 +1,13 @@
-import { ResolvedFn, RejectedFn } from './../types/index';
+import { ResolvedFn, RejectedFn } from './../types/index'
 
 interface Interceptor<T> {
   resolved: ResolvedFn<T>
   rejected?: RejectedFn
 }
 
+/**
+ * 拦截器控制类，维护一个拦截器数组
+ */
 export default class InterceptorManager<T> {
   private interceptors: Array<Interceptor<T> | null>
 
@@ -12,7 +15,7 @@ export default class InterceptorManager<T> {
     this.interceptors = []
   }
 
-  use(resolved: ResolvedFn<T>, rejected?: RejectedFn ): number {
+  use(resolved: ResolvedFn<T>, rejected?: RejectedFn): number {
     this.interceptors.push({
       resolved,
       rejected

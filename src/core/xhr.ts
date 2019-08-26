@@ -19,7 +19,8 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
     request.open(method.toUpperCase(), url!, true) // url! 表示即使 url 是可选属性，我们也可以断言它不为空，这时就需要我们保证代码的正确性了
 
     Object.keys(headers).forEach(name => {
-      if (data === null && name.toLowerCase() === 'content-type') { // 如果没数据就不需要赋值 content-type
+      if (data === null && name.toLowerCase() === 'content-type') {
+        // 如果没数据就不需要赋值 content-type
         delete headers[name]
       } else {
         request.setRequestHeader(name, headers[name])
@@ -36,7 +37,7 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       }
       const resopnseHeaders = parseHeaders(request.getAllResponseHeaders())
       const responseData = responseType !== 'text' ? request.response : request.responseText
-      const reponse: AxiosResponse = {
+      const response: AxiosResponse = {
         data: responseData,
         status: request.status,
         statusText: request.statusText,
@@ -44,7 +45,7 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
         config,
         request
       }
-      handleResponse(reponse)
+      handleResponse(response)
     }
 
     request.onerror = () => {
@@ -56,7 +57,6 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
     }
 
     request.send(data)
-
 
     // 处理响应
     function handleResponse(response: AxiosResponse) {

@@ -1,6 +1,14 @@
-import { AxiosRequestConfig, AxiosPromise, Method, AxiosResponse, ResolvedFn, RejectedFn } from './../types/index';
-import dispatch from './dispatch';
-import InterceptorManager from './InterceptorManager';
+import {
+  AxiosRequestConfig,
+  AxiosPromise,
+  Method,
+  AxiosResponse,
+  ResolvedFn,
+  RejectedFn
+} from './../types/index'
+import dispatch from './dispatch'
+import InterceptorManager from './InterceptorManager'
+import mergeConfig from './mergeConfig'
 
 interface Interceptor {
   request: InterceptorManager<AxiosRequestConfig> // 类实例类型
@@ -8,14 +16,16 @@ interface Interceptor {
 }
 
 interface PromiseChain<T> {
-  resolved: ResolvedFn<T> | ((config: AxiosRequestConfig) => AxiosPromise), // 注意这里允许两种类型
+  resolved: ResolvedFn<T> | ((config: AxiosRequestConfig) => AxiosPromise<T>) // 注意这里允许两种类型
   rejected?: RejectedFn // 拦截器的 reject 是可选的
 }
 
 export default class Axios {
+  defaults: AxiosRequestConfig
   interceptors: Interceptor
 
-  constructor() {
+  constructor(initConfig: AxiosRequestConfig) {
+    this.defaults = initConfig
     this.interceptors = {
       request: new InterceptorManager<AxiosRequestConfig>(),
       response: new InterceptorManager<AxiosResponse>()
@@ -23,12 +33,17 @@ export default class Axios {
   }
 
   request(url: any, config?: any): AxiosPromise {
-    if (typeof url === 'string') { // 当请求参数有两个，即调用形式和 get/delete/head... 一样
+    if (typeof url === 'string') {
+      // 当请求参数有两个，即调用形式和 get/delete/head... 一样
       if (!config) config = {}
       config.url = url
-    } else { // 当请求参数只有一个时，url 就是 config
+    } else {
+      // 当请求参数只有一个时，url 是一个对象，就是 config
       config = url
     }
+
+    // 合并配置
+    config = mergeConfig(this.defaults, config)
 
     // 请求时并不是直接请求，而是经过一系列中间件后再发送请求
     const chain: PromiseChain<any>[] = [
@@ -39,18 +54,18 @@ export default class Axios {
     ]
 
     // 添加拦截器(中间件)，请求拦截器的顺序是先添加后执行
-    this.interceptors.request.forEach((interceptor) => {
+    this.interceptors.request.forEach(interceptor => {
       chain.unshift(interceptor)
     })
     // 响应拦截器的顺序是先添加先执行
-    this.interceptors.response.forEach((interceptor) => {
+    this.interceptors.response.forEach(interceptor => {
       chain.push(interceptor)
     })
 
     // 开始执行调用连
     let promise = Promise.resolve(config)
 
-    while(chain.length) {
+    while (chain.length) {
       const { resolved, rejected } = chain.shift()!
       promise = promise.then(resolved, rejected)
     }
@@ -61,18 +76,23 @@ export default class Axios {
   // 无数据请求通用函数
   requestMethodWithoutData(method: Method, url: string, config?: AxiosRequestConfig): AxiosPromise {
     return this.request({
-      ...config || {},
+      ...(config || {}),
       method,
-      url,
+      url
     })
   }
   // 带数据请求通用函数
-  requestMethodWithData(method: Method, url: string, data: any, config?: AxiosRequestConfig): AxiosPromise {
+  requestMethodWithData(
+    method: Method,
+    url: string,
+    data: any,
+    config?: AxiosRequestConfig
+  ): AxiosPromise {
     return this.request({
-      ...config || {},
+      ...(config || {}),
       method,
       url,
-      data,
+      data
     })
   }
 

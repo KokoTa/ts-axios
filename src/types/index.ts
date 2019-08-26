@@ -1,4 +1,4 @@
-import { get } from "https";
+import { get } from 'https'
 
 /**
  * 类型声明文件
@@ -28,9 +28,11 @@ export interface AxiosRequestConfig {
   headers?: any
   responseType?: XMLHttpRequestResponseType // TS 自带的类型
   timeout?: number
+
+  [propName: string]: any
 }
 
-export interface AxiosResponse<T=any> {
+export interface AxiosResponse<T = any> {
   data: T
   status: number
   statusText: string
@@ -40,7 +42,7 @@ export interface AxiosResponse<T=any> {
 }
 
 // 使用 Promise 泛型接口，指定 resolve 返回的数据为 AxiosResponse
-export interface AxiosPromise<T=any> extends Promise<AxiosResponse<T>> {}
+export interface AxiosPromise<T = any> extends Promise<AxiosResponse<T>> {}
 
 export interface AxiosError extends Error {
   isAxiosError: boolean
@@ -51,27 +53,29 @@ export interface AxiosError extends Error {
 }
 
 export interface Axios {
-  request<T=any>(config: AxiosRequestConfig): AxiosPromise<T>
-
-  get<T=any>(url: string, config?: AxiosRequestConfig): AxiosPromise<T>
-  delete<T=any>(url: string, config?: AxiosRequestConfig): AxiosPromise<T>
-  head<T=any>(url: string, config?: AxiosRequestConfig): AxiosPromise<T>
-  options<T=any>(url: string, config?: AxiosRequestConfig): AxiosPromise<T>
-
-  post<T=any>(url: string, data?: any, config?: AxiosRequestConfig): AxiosPromise<T>
-  put<T=any>(url: string, data?: any, config?: AxiosRequestConfig): AxiosPromise<T>
-  patch<T=any>(url: string, data?: any, config?: AxiosRequestConfig): AxiosPromise<T>
+  defaults: AxiosRequestConfig
 
   interceptors: {
-    request: AxiosInterceptorManager<AxiosRequestConfig>,
+    request: AxiosInterceptorManager<AxiosRequestConfig>
     response: AxiosInterceptorManager<AxiosResponse>
   }
+
+  request<T = any>(config: AxiosRequestConfig): AxiosPromise<T>
+
+  get<T = any>(url: string, config?: AxiosRequestConfig): AxiosPromise<T>
+  delete<T = any>(url: string, config?: AxiosRequestConfig): AxiosPromise<T>
+  head<T = any>(url: string, config?: AxiosRequestConfig): AxiosPromise<T>
+  options<T = any>(url: string, config?: AxiosRequestConfig): AxiosPromise<T>
+
+  post<T = any>(url: string, data?: any, config?: AxiosRequestConfig): AxiosPromise<T>
+  put<T = any>(url: string, data?: any, config?: AxiosRequestConfig): AxiosPromise<T>
+  patch<T = any>(url: string, data?: any, config?: AxiosRequestConfig): AxiosPromise<T>
 }
 
 // Axios 默认可以调用自己，但也可以通过扩展接口调用
 export interface AxiosInstance extends Axios {
-  <T=any>(config: AxiosRequestConfig): AxiosPromise<T>
-  <T=any>(url: string, config?: AxiosRequestConfig): AxiosPromise<T>
+  <T = any>(config: AxiosRequestConfig): AxiosPromise<T>
+  <T = any>(url: string, config?: AxiosRequestConfig): AxiosPromise<T>
 }
 
 export interface AxiosInterceptorManager<T> {
