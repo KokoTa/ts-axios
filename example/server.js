@@ -5,6 +5,7 @@ const webpackDevMiddleware = require('webpack-dev-middleware')
 const webpackHotMiddleware = require('webpack-hot-middleware')
 const webpackConfig = require('./webpack.config')
 const fs = require('fs')
+const childProcess = require('child_process')
 
 const app = express()
 const compiler = webpack(webpackConfig)
@@ -143,4 +144,5 @@ app.use(router)
 
 module.exports = app.listen(3000, () => {
   console.log('server running at 3000...')
+  childProcess.exec('start http://localhost:3000/')
 })

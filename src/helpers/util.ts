@@ -27,14 +27,12 @@ export function extend<T, U>(to: T, from: U): T & U {
 // 深拷贝，后者 key 值会覆盖前者同名 key 值
 export function deepMerge(...objs: any[]): any {
   const result = Object.create(null)
-
+  // 遍历多个对象的键值对，然后合并到一个新的对象上
   objs.forEach(obj => {
     if (obj) {
       Object.keys(obj).forEach(key => {
         const val = obj[key]
-        // 判断是否是对象来进行递归
         if (isPlainObject(val)) {
-          // 如果是对象，那么还需要判断是否存在对应键值对，存在的话需要合并
           if (isPlainObject(result[key])) {
             result[key] = deepMerge(result[key], val)
           } else {

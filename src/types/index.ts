@@ -31,6 +31,7 @@ export interface AxiosRequestConfig {
   timeout?: number
   transformRequest?: AxiosTransformer | AxiosTransformer[]
   transformResponse?: AxiosTransformer | AxiosTransformer[]
+  cancelToken?: CancelToken
 
   [propName: string]: any
 }
@@ -44,7 +45,7 @@ export interface AxiosResponse<T = any> {
   request: any
 }
 
-// 使用 Promise 泛型接口，指定 resolve 返回的数据为 AxiosResponse
+// 使用 Promise 泛型接口，指定 resolve 返回的数据为 AxiosResponse；注意这里 T = any 意味着传不传泛型都可以
 export interface AxiosPromise<T = any> extends Promise<AxiosResponse<T>> {}
 
 export interface AxiosError extends Error {
@@ -101,4 +102,31 @@ export interface AxiosTransformer {
 
 export interface AxiosStatic extends AxiosInstance {
   create(config: AxiosRequestConfig): AxiosInstance
+}
+
+// 取消类实例类型
+export interface CancelToken {
+  promise: Promise<string> // 一个 pending 状态的 promise，执行取消操作时触发，中断请求
+  reason?: string
+}
+
+// 取消函数
+export interface Canceler {
+  (message?: string): void
+}
+
+// 取消执行器
+export interface CancelExecutor {
+  (cancel: Canceler): void
+}
+
+export interface CancelTokenSource {
+  token: CancelToken
+  cancel: Canceler
+}
+
+// 取消类类类型
+export interface CancelTokenStatic {
+  new(executor: CancelExecutor): CancelToken
+  source(): CancelTokenSource
 }
