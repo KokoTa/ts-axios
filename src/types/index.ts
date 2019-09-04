@@ -102,12 +102,16 @@ export interface AxiosTransformer {
 
 export interface AxiosStatic extends AxiosInstance {
   create(config: AxiosRequestConfig): AxiosInstance
+
+  CancelToken: CancelTokenStatic
+  Cancel: CancelStatic
+  isCancel: (value: any) => boolean
 }
 
 // 取消类实例类型
 export interface CancelToken {
-  promise: Promise<string> // 一个 pending 状态的 promise，执行取消操作时触发，中断请求
-  reason?: string
+  promise: Promise<Cancel> // 一个 pending 状态的 promise，执行取消操作时触发，中断请求
+  reason?: Cancel
 }
 
 // 取消函数
@@ -120,6 +124,7 @@ export interface CancelExecutor {
   (cancel: Canceler): void
 }
 
+// 取消类的工厂方法返回类型
 export interface CancelTokenSource {
   token: CancelToken
   cancel: Canceler
@@ -129,4 +134,12 @@ export interface CancelTokenSource {
 export interface CancelTokenStatic {
   new(executor: CancelExecutor): CancelToken
   source(): CancelTokenSource
+}
+
+export interface Cancel {
+  message?: string
+}
+
+export interface CancelStatic {
+  new(message?: string): Cancel
 }

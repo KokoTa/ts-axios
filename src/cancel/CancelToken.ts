@@ -1,22 +1,22 @@
 import { CancelExecutor, CancelTokenSource, Canceler } from './../types/index';
-import axios from '..';
+import Cancel from './Cancel'
 
 interface ResolvePromise {
-  (reason?: string): void
+  (reason?: Cancel): void
 }
 
 /**
  * 实例化这个类就意味着直接中断请求
  */
 export default class CancelToken {
-  promise: Promise<string>
-  reason?: string
+  promise: Promise<Cancel>
+  reason?: Cancel
 
   constructor(executor: CancelExecutor) {
     let resolvePromise: ResolvePromise
 
     // 把 resolve 提取出来，然后在 executor 中执行，让 promise 从 pending 变为 resolved
-    this.promise = new Promise<string>(resolve => {
+    this.promise = new Promise<Cancel>(resolve => {
       resolvePromise = resolve
     })
 
@@ -24,7 +24,7 @@ export default class CancelToken {
     // 注意 executor 的逻辑是在生成实例时赋值的
     executor((message) => {
       if (this.reason) return
-      this.reason = message
+      this.reason = new Cancel(message)
       resolvePromise(this.reason)
     })
 
