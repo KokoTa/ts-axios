@@ -112,6 +112,8 @@ export interface AxiosStatic extends AxiosInstance {
 export interface CancelToken {
   promise: Promise<Cancel> // 一个 pending 状态的 promise，执行取消操作时触发，中断请求
   reason?: Cancel
+
+  throwIfRequested(): void // 如果这个 CancelToken 已经被使用过了，那么直接抛出错误
 }
 
 // 取消函数

@@ -11,7 +11,14 @@ function processConfig(config: AxiosRequestConfig): void {
   config.headers = flatterHeaders(config.headers, config.method!) // 请求头扁平化
 }
 
+function throwErrorIfCancelTokenUsed(config: AxiosRequestConfig) {
+  if (config.cancelToken) { // 如果取消器已经被使用过，那么就直接抛出错误，不用继续请求了
+    config.cancelToken.throwIfRequested()
+  }
+}
+
 function dispatch(config: AxiosRequestConfig): AxiosPromise {
+  throwErrorIfCancelTokenUsed(config)
   processConfig(config)
   return xhr(config).then(res => {
     res.data = transform(res.data, res.headers, res.config.transformResponse) // 根据函数改变 data 和 headers

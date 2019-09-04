@@ -20,9 +20,9 @@ export default class CancelToken {
       resolvePromise = resolve
     })
 
-    // cancel 函数用来改变 promise 状态
     // 注意 executor 的逻辑是在生成实例时赋值的
     executor((message) => {
+      // cancel 函数用来改变 promise 状态
       if (this.reason) return
       this.reason = new Cancel(message)
       resolvePromise(this.reason)
@@ -42,25 +42,12 @@ export default class CancelToken {
       token
     }
   }
+
+  // 如果这个实例已经被使用过，则下次使用直接抛出错误
+  throwIfRequested() {
+    if (this.reason) {
+      throw this.reason
+    }
+  }
+
 }
-
-/**
- * cancelToken 的使用方法
- * 方法一：直接生成实例
- */
-// const CancelToken = axios.CancelToken
-// let cancel
-// axios.get('/', {
-//   cancelToken: new CancelToken(c => cancel = c)
-// })
-// cancel()
-
-/**
- * 方法二： 调用工厂方法生成实例，换汤不换药
- */
-// const CancelToken = axios.CancelToken
-// const source = CancelToken.source()
-// axios.get('/', {
-//   cancelToken: source.token
-// })
-// source.cancel()
