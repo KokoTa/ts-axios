@@ -16,6 +16,7 @@ export default class CancelToken {
     let resolvePromise: ResolvePromise
 
     // 把 resolve 提取出来，然后在 executor 中执行，让 promise 从 pending 变为 resolved
+    // 如果这个 promise 继续执行，则会中断请求
     this.promise = new Promise<Cancel>(resolve => {
       resolvePromise = resolve
     })
@@ -44,6 +45,7 @@ export default class CancelToken {
   }
 
   // 如果这个实例已经被使用过，则下次使用直接抛出错误
+  // 这个错误会被 拦截器 中的其中一环捕获，详情见 core/Axios.ts
   throwIfRequested() {
     if (this.reason) {
       throw this.reason

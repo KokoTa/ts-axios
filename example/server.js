@@ -144,5 +144,5 @@ app.use(router)
 
 module.exports = app.listen(3000, () => {
   console.log('server running at 3000...')
-  childProcess.exec('start http://localhost:3000/')
+  // childProcess.exec('start http://localhost:3000/')
 })

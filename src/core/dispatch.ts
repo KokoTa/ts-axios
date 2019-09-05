@@ -12,7 +12,8 @@ function processConfig(config: AxiosRequestConfig): void {
 }
 
 function throwErrorIfCancelTokenUsed(config: AxiosRequestConfig) {
-  if (config.cancelToken) { // 如果取消器已经被使用过，那么就直接抛出错误，不用继续请求了
+  if (config.cancelToken) {
+    // 检查取消器是否被使用，如果是则直接抛出错误，不用继续请求了
     config.cancelToken.throwIfRequested()
   }
 }

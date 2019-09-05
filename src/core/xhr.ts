@@ -56,6 +56,7 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       reject(createError(`Timeout of ${timeout} ms exceeded`, config, 'ECONNABORTED', request))
     }
 
+    // 检查是否有 cancelToken，如果有就尝试执行 promise，这个 promise 是受控的
     if (cancelToken) {
       cancelToken.promise.then(reason => {
         request.abort()

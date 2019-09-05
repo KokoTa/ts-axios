@@ -32,6 +32,7 @@ export default class Axios {
     }
   }
 
+  // 通用请求函数
   request(url: any, config?: any): AxiosPromise {
     if (typeof url === 'string') {
       // 当请求参数有两个，即调用形式和 get/delete/head... 一样
