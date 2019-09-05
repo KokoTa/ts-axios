@@ -1,10 +1,12 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
+const multipart = require('connect-multiparty')
 const webpack = require('webpack')
 const webpackDevMiddleware = require('webpack-dev-middleware')
 const webpackHotMiddleware = require('webpack-hot-middleware')
 const webpackConfig = require('./webpack.config')
+const path = require('path')
 
 // 引入文件后自动开启一个服务器
 require('./server2')
@@ -32,6 +34,10 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 
 app.use(cookieParser())
+
+app.use(multipart({
+  uploadDir: path.resolve(__dirname, 'files')
+}))
 
 const router = express.Router()
 
@@ -155,6 +161,10 @@ router.get('/more/get', (req, res) => {
   res.json({
     msg: req.cookies
   })
+})
+router.post('/more/upload', (req, res) => {
+  console.log(req.body, req.files)
+  res.end('upload success')
 })
 
 app.use(router)

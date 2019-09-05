@@ -41,3 +41,13 @@ axios.get('/simple/get', {
   }
 })
 source.cancel("cancel 3")
+
+// axios 调用链原理如下：
+// function dispatch() {
+//   return new Promise((resolve, reject) => {
+//     reject('fuck')
+//   })
+// }
+// Promise.resolve()
+//   .then(dispatch)
+//   .catch((err) => console.log(err))

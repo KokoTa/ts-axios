@@ -35,6 +35,8 @@ export interface AxiosRequestConfig {
   withCredentials?: boolean // 跨域是否带 cookie
   xsrfCookieName?: string // cookie 中存储 token 的名字
   xsrfHeaderName?: string // header 中存储 token 的名字
+  onDownloadProgress?: (e: ProgressEvent) => void
+  onUploadProgress?: (e: ProgressEvent) => void
 
   [propName: string]: any
 }
