@@ -1,11 +1,13 @@
 const express = require('express')
 const bodyParser = require('body-parser')
+const cookieParser = require('cookie-parser')
 const webpack = require('webpack')
 const webpackDevMiddleware = require('webpack-dev-middleware')
 const webpackHotMiddleware = require('webpack-hot-middleware')
 const webpackConfig = require('./webpack.config')
-const fs = require('fs')
-const childProcess = require('child_process')
+
+// 引入文件后自动开启一个服务器
+require('./server2')
 
 const app = express()
 const compiler = webpack(webpackConfig)
@@ -20,10 +22,16 @@ app.use(webpackDevMiddleware(compiler, {
 
 app.use(webpackHotMiddleware(compiler))
 
-app.use(express.static(__dirname))
+app.use(express.static(__dirname, {
+  setHeaders(res) {
+    res.cookie('COOKIE-TOKEN', 'abc')
+  }
+}))
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
+
+app.use(cookieParser())
 
 const router = express.Router()
 
@@ -137,6 +145,15 @@ router.get('/interceptor/get', (req, res) => {
 router.post('/config/post', (req, res) => {
   res.json({
     msg: req.body
+  })
+})
+
+/**
+ * More
+ */
+router.get('/more/get', (req, res) => {
+  res.json({
+    msg: req.cookies
   })
 })
 

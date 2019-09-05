@@ -68,3 +68,40 @@ export function buildURL(url: string, params?: any): string {
 
   return url
 }
+
+/**
+ * 检查是否是绝对路径
+ * @param url 请求路径
+ */
+export function isAbsoluteURL(url: string): boolean {
+  return /(^[a-z][a-z\d\+\-\.]*:)?\/\//i.test(url)
+}
+
+/**
+ * 检查是否请求地址和当前地址同源
+ * @param url 请求地址
+ */
+const curOrigin = parseURL(window.location.href)
+export function isURLSameOrigin(url: string): boolean {
+  const requestOrigin = parseURL(url)
+
+  return (curOrigin.protocol === requestOrigin.protocol &&
+          curOrigin.host === requestOrigin.host)
+}
+
+/**
+ * 解析页面的协议和地址
+ * @param url 需要解析的地址
+ */
+interface URLOrigin {
+  protocol: string
+  host: string
+}
+function parseURL(url: string): URLOrigin {
+  const a = document.createElement('a')
+  a.href = url
+
+  const { protocol, host } = a
+
+  return { protocol, host }
+}
