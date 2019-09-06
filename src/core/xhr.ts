@@ -19,7 +19,9 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       xsrfCookieName,
       xsrfHeaderName,
       onDownloadProgress,
-      onUploadProgress } = config
+      onUploadProgress,
+      auth,
+      validateStatus } = config
 
     const request = new XMLHttpRequest()
 
@@ -53,6 +55,11 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
       // 如果 data 类型是 FormData，则要删除 Content-Type 头，让浏览器去自己识别类型，因为 FormData 中可以保存多种类型的值(比如：字符串、文件等)
       if (isFormData(data)) {
         delete headers['Content-Type']
+      }
+
+      // 授权
+      if (auth) {
+        headers['Authorization'] = 'Basic ' + btoa(auth.username + ':' + auth.password)
       }
 
       // 赋值请求头
@@ -97,7 +104,7 @@ export default function xhr(config: AxiosRequestConfig): AxiosPromise {
     function processResponse() {
 
       function handleResponse(response: AxiosResponse) {
-        if (response.status >= 200 && response.status < 300) {
+        if (!validateStatus || validateStatus(response.status)) {
           resolve(response)
         } else {
           reject(

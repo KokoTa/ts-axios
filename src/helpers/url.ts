@@ -1,7 +1,8 @@
+import { AxiosRequestConfig } from './../types/index';
 /**
  * 请求路径处理文件
  */
-import { isDate, isPlainObject } from './util'
+import { isDate, isPlainObject, isURLSearchParams } from './util'
 
 /**
  * 转义，有一些字符还需要再转义回来
@@ -20,43 +21,54 @@ function encode(val: string): string {
 }
 
 /**
- * 拼接请求路径
+ * 拼接 URL 参数字段
  * @param url 请求路径
  * @param params 请求参数
  */
-export function buildURL(url: string, params?: any): string {
+export function buildURL(url: string, params?: any, paramsSerializer?: (params: any) => string): string {
   if (!params) {
     return url
   }
 
-  const parts: string[] = []
+  let serializedParams;
 
-  Object.keys(params).forEach(key => {
-    const val = params[key]
-    // 如果值为空
-    if (val === null || val === undefined) {
-      return
-    }
+  if (paramsSerializer) {
+    // 检查是否有自定义序列化函数
+    serializedParams = paramsSerializer(params)
+  } else if (isURLSearchParams(params)) {
+    // 检查是否是 URLSearchParams 类型
+    serializedParams = params.toString()
+  } else {
+    const parts: string[] = []
 
-    // 如果值不为空
-    let vals = []
-    if (Array.isArray(val)) {
-      vals = val
-      key += '[]'
-    } else {
-      vals = [val]
-    }
-    vals.forEach(val => {
-      if (isDate(val)) {
-        val = val.toISOString()
-      } else if (isPlainObject(val)) {
-        val = JSON.stringify(val)
+    Object.keys(params).forEach(key => {
+      const val = params[key]
+      // 如果值为空
+      if (val === null || val === undefined) {
+        return
       }
-      parts.push(`${encode(key)}=${encode(val)}`)
-    })
-  })
 
-  let serializedParams: string = parts.join('&')
+      // 如果值不为空
+      let vals = []
+      if (Array.isArray(val)) {
+        vals = val
+        key += '[]'
+      } else {
+        vals = [val]
+      }
+      vals.forEach(val => {
+        if (isDate(val)) {
+          val = val.toISOString()
+        } else if (isPlainObject(val)) {
+          val = JSON.stringify(val)
+        }
+        parts.push(`${encode(key)}=${encode(val)}`)
+      })
+    })
+
+    serializedParams = parts.join('&')
+  }
+
 
   if (serializedParams) {
     const hashIndex = url.indexOf('#')
@@ -70,11 +82,29 @@ export function buildURL(url: string, params?: any): string {
 }
 
 /**
+ * 拼接 URL
+ */
+export function transformURL(config: AxiosRequestConfig): string {
+  let { url, params, paramsSerializer, baseURL } = config // 这里不抽取 data 和 headers 为副本，我们要直接操作其对应的原始对象
+  if (baseURL && !isAbsoluteURL(url!)) { // 检查是否有传 baseURL 且 url 不为绝对地址
+    url = combineURL(baseURL, url)
+  }
+  return buildURL(url!, params, paramsSerializer) // 拼接请求路径，感叹号标识这个值一定不为空
+}
+
+/**
  * 检查是否是绝对路径
  * @param url 请求路径
  */
 export function isAbsoluteURL(url: string): boolean {
   return /(^[a-z][a-z\d\+\-\.]*:)?\/\//i.test(url)
+}
+
+/**
+ * 拼接 url
+ */
+export function combineURL(baseURL: string, relativeURL?: string): string {
+  return relativeURL ? baseURL.replace(/\/+$/, '') + '/' + relativeURL.replace(/^\/+/, '') : baseURL
 }
 
 /**

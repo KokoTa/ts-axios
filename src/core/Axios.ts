@@ -9,6 +9,7 @@ import {
 import dispatch from './dispatch'
 import InterceptorManager from './InterceptorManager'
 import mergeConfig from './mergeConfig'
+import { transformURL } from '../helpers/url'
 
 interface Interceptor {
   request: InterceptorManager<AxiosRequestConfig> // 类实例类型
@@ -16,7 +17,7 @@ interface Interceptor {
 }
 
 interface PromiseChain<T> {
-  resolved: ResolvedFn<T> | ((config: AxiosRequestConfig) => AxiosPromise<T>) // 注意这里允许两种类型
+  resolved: ResolvedFn<T> | ((config: AxiosRequestConfig) => AxiosPromise<T>) // 注意这里允许两种类型，后者特指 dispatch
   rejected?: RejectedFn // 拦截器的 reject 是可选的
 }
 
@@ -118,5 +119,10 @@ export default class Axios {
   }
   patch(url: string, data?: any, config?: AxiosRequestConfig): AxiosPromise {
     return this.requestMethodWithData('patch', url, data, config)
+  }
+
+  getUri(config?: AxiosRequestConfig): string {
+    config = mergeConfig(this.defaults, config)
+    return transformURL(config)
   }
 }

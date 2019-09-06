@@ -7,6 +7,7 @@ const webpackDevMiddleware = require('webpack-dev-middleware')
 const webpackHotMiddleware = require('webpack-hot-middleware')
 const webpackConfig = require('./webpack.config')
 const path = require('path')
+const atob = require('atob')
 
 // 引入文件后自动开启一个服务器
 require('./server2')
@@ -159,12 +160,35 @@ router.post('/config/post', (req, res) => {
  */
 router.get('/more/get', (req, res) => {
   res.json({
-    msg: req.cookies
+    cookies: req.cookies,
+    query: req.query,
+    body: req.body
   })
 })
 router.post('/more/upload', (req, res) => {
   console.log(req.body, req.files)
   res.end('upload success')
+})
+router.post('/more/post', (req, res) => {
+  const auth = req.headers.authorization
+  const [type, credentials] = auth.split(' ')
+  const [username, password] = atob(credentials).split(':')
+  if (type === 'Basic' && username === 'KokoTa' && password === '123456') {
+    res.json(req.body)
+  } else {
+    res.status(401)
+    res.end('Unauthorization')
+  }
+})
+router.get('/more/304', (req, res) => {
+  res.status(304)
+  res.end()
+})
+router.get('/more/a', (req, res) => {
+  res.end('a')
+})
+router.get('/more/b', (req, res) => {
+  res.end('b')
 })
 
 app.use(router)

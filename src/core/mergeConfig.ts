@@ -6,7 +6,7 @@ import { isPlainObject, deepMerge } from '../helpers/util'
  */
 const strat = Object.create(null)
 const onlyConfig2Keys: string[] = ['url', 'params', 'data']
-const deepConfigKeys: string[] = ['headers']
+const deepConfigKeys: string[] = ['headers', 'auth']
 
 // 优先使用配置2策略
 function priConfig2(val1: any, val2: any): any {

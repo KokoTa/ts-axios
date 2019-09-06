@@ -1,7 +1,8 @@
+import { AxiosError } from './../../src/types/index';
 import axios from '../../src/index'
 import Nprogress from 'nprogress'
 import 'nprogress/nprogress.css'
-
+import qs from 'qs'
 
 /**
  * withCredentails
@@ -87,3 +88,95 @@ upload.addEventListener('click', () => {
     instance.post('/more/upload', data)
   }
 })
+
+/**
+ * auth
+ */
+axios.post('/more/post', {
+  a: 1
+}, {
+  auth: {
+    username: 'KokoTa',
+    password: '123456'
+  }
+}).then((res) => console.log(res))
+
+/**
+ * validateStatus
+ */
+axios.get('/more/304')
+  .then((res) => console.log(res))
+  .catch((e: AxiosError) => console.log(e.message))
+axios.get('/more/304', {
+    validateStatus(status: number) {
+      return status >= 200 && status < 400
+    }
+  })
+  .then((res) => console.log(res))
+  .catch((e: AxiosError) => console.log(e.message))
+
+/**
+ * validateSerializer
+ */
+axios.get('/more/get', {
+  params: new URLSearchParams('a=b&c=d')
+}).then((res) => console.log(res))
+
+axios.get('/more/get', {
+  params: {
+    a: 1,
+    b: 2,
+    c: ['a', 'b', 'c']
+  }
+}).then((res) => console.log(res))
+
+axios.get('/more/get', {
+  params: {
+    a: 1,
+    b: 2,
+    c: ['a', 'b', 'c']
+  },
+  paramsSerializer(params) {
+    return qs.stringify(params, {
+      arrayFormat: 'brackets'
+    })
+  }
+})
+
+/**
+ * baseURL
+ */
+instance.defaults.baseURL = 'https://tse4-mm.cn.bing.net/'
+instance.get('/th?id=OIP.f8OZbEc42FwD-qi4gF15HQAAAA&w=177&h=171&c=7&o=5&pid=1.7')
+instance.get('https://tse4-mm.cn.bing.net/th?id=OIP.f8OZbEc42FwD-qi4gF15HQAAAA&w=177&h=171&c=7&o=5&pid=1.7')
+
+/**
+ * all/spread/getUri
+ */
+function getA() {
+  return axios.get('/more/a')
+}
+function getB() {
+  return axios.get('/more/b')
+}
+
+axios.all([getA(), getB()])
+  .then(([resA, resB]) => {
+    console.log(resA.data, resB.data)
+  })
+
+axios.all([getA(), getB()])
+  .then(axios.spread((resA, resB) => {
+    console.log(resA.data, resB.data)
+  }))
+
+const fackConfig = {
+  baseURL: 'http://www.baidu.com',
+  url: '/get/1',
+  params: {
+    a: 1,
+    b: 2,
+    c: ['a', 'b', 'c']
+  }
+}
+console.log(axios.getUri(fackConfig))

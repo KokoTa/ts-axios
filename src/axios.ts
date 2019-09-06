@@ -24,8 +24,27 @@ axios.create = function(config: AxiosRequestConfig) {
   return createInstance(mergeConfig(defaultConfig, config))
 }
 
+// 取消器
 axios.CancelToken = CancelToken
+// 取消消息
 axios.Cancel = Cancel
+// 判断是否取消
 axios.isCancel = isCancel
+
+// Promise.all 的返回数组
+// spread 方法传入 callback，这个函数的传参格式是 a1, a2, a3 这种格式，它是用户定义的处理函数
+// spread 方法返回一个函数，这个函数中的 arr 就是 Promise.all 中返回的数组
+// 两个方法结合起来本质上就是让 [a1, a2, a3] 变成 a1, a2, a3
+axios.all = (promises) => {
+  return Promise.all(promises)
+}
+axios.spread = (callback) => {
+  return (arr) => {
+    return callback.apply(null, arr)
+  }
+}
+
+// 返回类本身
+axios.Axios = Axios
 
 export default axios

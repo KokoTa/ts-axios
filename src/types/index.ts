@@ -1,6 +1,3 @@
-import { get } from 'https'
-import { transformRequest } from '../helpers/data'
-
 /**
  * 类型声明文件
  */
@@ -37,6 +34,10 @@ export interface AxiosRequestConfig {
   xsrfHeaderName?: string // header 中存储 token 的名字
   onDownloadProgress?: (e: ProgressEvent) => void
   onUploadProgress?: (e: ProgressEvent) => void
+  auth?: AxiosBasicCredentials
+  validateStatus?: (status: number) => boolean
+  paramsSerializer?: (params: any) => string
+  baseURL?: string
 
   [propName: string]: any
 }
@@ -79,6 +80,8 @@ export interface Axios {
   post<T = any>(url: string, data?: any, config?: AxiosRequestConfig): AxiosPromise<T>
   put<T = any>(url: string, data?: any, config?: AxiosRequestConfig): AxiosPromise<T>
   patch<T = any>(url: string, data?: any, config?: AxiosRequestConfig): AxiosPromise<T>
+
+  getUri(config?: AxiosRequestConfig): string
 }
 
 // Axios 默认可以调用自己，但也可以通过扩展接口调用
@@ -105,12 +108,21 @@ export interface AxiosTransformer {
   (data: any, headrs?: any): any
 }
 
+export interface AxiosClassStatic {
+  new (config: AxiosRequestConfig): Axios
+}
+
 export interface AxiosStatic extends AxiosInstance {
   create(config: AxiosRequestConfig): AxiosInstance
 
   CancelToken: CancelTokenStatic
   Cancel: CancelStatic
   isCancel: (value: any) => boolean
+
+  all<T>(promises: Array<T | Promise<T>>): Promise<T[]> // 传参形式和 Promise.all([p1, p2 , p3]) 一样
+  spread<T, R>(callback: (...args: T[]) => R): (arr :T[]) => R // callback 传参 function(a1, a2, a3){}，返回的函数传参 function([r1, r2, r3]){}
+
+  Axios: AxiosClassStatic
 }
 
 // 取消类实例类型
@@ -149,4 +161,9 @@ export interface Cancel {
 
 export interface CancelStatic {
   new(message?: string): Cancel
+}
+
+export interface AxiosBasicCredentials {
+  username: string
+  password: string
 }
