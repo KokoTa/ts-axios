@@ -120,7 +120,7 @@ export interface AxiosStatic extends AxiosInstance {
   isCancel: (value: any) => boolean
 
   all<T>(promises: Array<T | Promise<T>>): Promise<T[]> // 传参形式和 Promise.all([p1, p2 , p3]) 一样
-  spread<T, R>(callback: (...args: T[]) => R): (arr :T[]) => R // callback 传参 function(a1, a2, a3){}，返回的函数传参 function([r1, r2, r3]){}
+  spread<T, R>(callback: (...args: T[]) => R): (arr: T[]) => R // callback 传参 function(a1, a2, a3){}，返回的函数传参 function([r1, r2, r3]){}
 
   Axios: AxiosClassStatic
 }
@@ -151,7 +151,7 @@ export interface CancelTokenSource {
 
 // 取消类类类型
 export interface CancelTokenStatic {
-  new(executor: CancelExecutor): CancelToken
+  new (executor: CancelExecutor): CancelToken
   source(): CancelTokenSource
 }
 
@@ -160,7 +160,7 @@ export interface Cancel {
 }
 
 export interface CancelStatic {
-  new(message?: string): Cancel
+  new (message?: string): Cancel
 }
 
 export interface AxiosBasicCredentials {

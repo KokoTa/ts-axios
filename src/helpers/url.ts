@@ -1,4 +1,4 @@
-import { AxiosRequestConfig } from './../types/index';
+import { AxiosRequestConfig } from './../types/index'
 /**
  * 请求路径处理文件
  */
@@ -25,12 +25,16 @@ function encode(val: string): string {
  * @param url 请求路径
  * @param params 请求参数
  */
-export function buildURL(url: string, params?: any, paramsSerializer?: (params: any) => string): string {
+export function buildURL(
+  url: string,
+  params?: any,
+  paramsSerializer?: (params: any) => string
+): string {
   if (!params) {
     return url
   }
 
-  let serializedParams;
+  let serializedParams
 
   if (paramsSerializer) {
     // 检查是否有自定义序列化函数
@@ -69,7 +73,6 @@ export function buildURL(url: string, params?: any, paramsSerializer?: (params: 
     serializedParams = parts.join('&')
   }
 
-
   if (serializedParams) {
     const hashIndex = url.indexOf('#')
     if (hashIndex !== -1) {
@@ -86,7 +89,8 @@ export function buildURL(url: string, params?: any, paramsSerializer?: (params: 
  */
 export function transformURL(config: AxiosRequestConfig): string {
   let { url, params, paramsSerializer, baseURL } = config // 这里不抽取 data 和 headers 为副本，我们要直接操作其对应的原始对象
-  if (baseURL && !isAbsoluteURL(url!)) { // 检查是否有传 baseURL 且 url 不为绝对地址
+  if (baseURL && !isAbsoluteURL(url!)) {
+    // 检查是否有传 baseURL 且 url 不为绝对地址
     url = combineURL(baseURL, url)
   }
   return buildURL(url!, params, paramsSerializer) // 拼接请求路径，感叹号标识这个值一定不为空
@@ -97,7 +101,7 @@ export function transformURL(config: AxiosRequestConfig): string {
  * @param url 请求路径
  */
 export function isAbsoluteURL(url: string): boolean {
-  return /(^[a-z][a-z\d\+\-\.]*:)?\/\//i.test(url)
+  return /^([a-z][a-z\d\+\-\.]*:)?\/\//i.test(url)
 }
 
 /**
@@ -115,8 +119,7 @@ const curOrigin = parseURL(window.location.href)
 export function isURLSameOrigin(url: string): boolean {
   const requestOrigin = parseURL(url)
 
-  return (curOrigin.protocol === requestOrigin.protocol &&
-          curOrigin.host === requestOrigin.host)
+  return curOrigin.protocol === requestOrigin.protocol && curOrigin.host === requestOrigin.host
 }
 
 /**

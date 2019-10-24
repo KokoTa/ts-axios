@@ -1,4 +1,4 @@
-import { CancelExecutor, CancelTokenSource, Canceler } from './../types/index';
+import { CancelExecutor, CancelTokenSource, Canceler } from './../types/index'
 import Cancel from './Cancel'
 
 interface ResolvePromise {
@@ -22,19 +22,18 @@ export default class CancelToken {
     })
 
     // 注意 executor 的逻辑是在生成实例时赋值的
-    executor((message) => {
+    executor(message => {
       // cancel 函数用来改变 promise 状态
       if (this.reason) return
       this.reason = new Cancel(message)
       resolvePromise(this.reason)
     })
-
   }
 
   // 工厂方法，生成实例
   static source(): CancelTokenSource {
     let cancel!: Canceler
-    const token = new CancelToken((cancelFn) => {
+    const token = new CancelToken(cancelFn => {
       // 把取消函数赋到外边去
       cancel = cancelFn
     })
@@ -51,5 +50,4 @@ export default class CancelToken {
       throw this.reason
     }
   }
-
 }

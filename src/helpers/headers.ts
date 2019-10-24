@@ -45,9 +45,10 @@ export function parseHeaders(headers: string): any {
   if (!headers) return parsed
 
   headers.split('\r\n').forEach(line => {
-    let [key, val] = line.split(':')
-    if (!key || !val) return
+    let [key, ...vals] = line.split(':') // 可能会出现 key: x:xx:xxx 的情况
     key = key.trim().toLowerCase()
+    if (!key) return
+    let val = vals.join(':')
     val = val.trim()
     parsed[key] = val
   })
