@@ -113,7 +113,7 @@ export interface AxiosClassStatic {
 }
 
 export interface AxiosStatic extends AxiosInstance {
-  create(config: AxiosRequestConfig): AxiosInstance
+  create(config?: AxiosRequestConfig): AxiosInstance
 
   CancelToken: CancelTokenStatic
   Cancel: CancelStatic

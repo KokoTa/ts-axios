@@ -2,7 +2,7 @@ import { AxiosRequestConfig, AxiosStatic } from './types/index'
 import Axios from './core/Axios'
 import { extend } from './helpers/util'
 import defaultConfig from './default'
-import mergeConfig from './core/mergeConfig';
+import mergeConfig from './core/mergeConfig'
 
 import CancelToken from './cancel/CancelToken'
 import Cancel, { isCancel } from './cancel/Cancel'
@@ -32,14 +32,12 @@ axios.Cancel = Cancel
 axios.isCancel = isCancel
 
 // Promise.all 的返回数组
-// spread 方法传入 callback，这个函数的传参格式是 a1, a2, a3 这种格式，它是用户定义的处理函数
-// spread 方法返回一个函数，这个函数中的 arr 就是 Promise.all 中返回的数组
-// 两个方法结合起来本质上就是让 [a1, a2, a3] 变成 a1, a2, a3
-axios.all = (promises) => {
+axios.all = promises => {
   return Promise.all(promises)
 }
-axios.spread = (callback) => {
-  return (arr) => {
+// 假设 arr 为 [arg1, arg2]，则将执行 callback(arg1, arg2)
+axios.spread = callback => {
+  return arr => {
     return callback.apply(null, arr)
   }
 }

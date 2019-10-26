@@ -19,21 +19,17 @@ function onlyConfig2(val1: any, val2: any): any {
 // 深度合并策略
 function deepMergeConfig(val1: any, val2: any): any {
   if (isPlainObject(val2)) {
-    // 如果是对象，则进行深度合并
     return deepMerge(val1, val2)
   } else if (typeof val2 !== 'undefined') {
-    // 如果有值且不是对象，则直接使用 val2
     return val2
   } else if (isPlainObject(val1)) {
-    // 如果没有 val2 且有 val1 是对象，则拷贝一个 val1 的副本
     return deepMerge(val1)
-  } else if (typeof val1 !== 'undefined') {
-    // 如果没有 val2 且有 val1 不是对象，则直接返回 val1
+  } else {
     return val1
   }
 }
 
-// 策略模式，申明 key 对应的合并函数
+// 让不同的 key 有不同的配置策略
 onlyConfig2Keys.forEach(key => {
   strat[key] = onlyConfig2
 })

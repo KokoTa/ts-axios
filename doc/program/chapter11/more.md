@@ -21,7 +21,9 @@ describe('defaults', () => {
   })
 
   test('should transform request json', () => {
-    expect((axios.defaults.transformRequest as AxiosTransformer[])[0]({ foo: 'bar' })).toBe('{"foo":"bar"}')
+    expect((axios.defaults.transformRequest as AxiosTransformer[])[0]({ foo: 'bar' })).toBe(
+      '{"foo":"bar"}'
+    )
   })
 
   test('should do nothing to request string', () => {
@@ -544,7 +546,8 @@ const responseData = responseType !== 'text' ? request.response : request.respon
 分支也没有测试完全。这里我们应该先判断存在 `responseType` 存在的情况下再去和 `text` 做对比，需要修改逻辑：
 
 ```typescript
-const responseData = responseType && responseType !== 'text' ? request.response : request.responseText
+const responseData =
+  responseType && responseType !== 'text' ? request.response : request.responseText
 ```
 
 这样再次跑测试，就覆盖了所有的分支。

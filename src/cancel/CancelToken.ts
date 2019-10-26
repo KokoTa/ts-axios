@@ -23,7 +23,6 @@ export default class CancelToken {
 
     // 注意 executor 的逻辑是在生成实例时赋值的
     executor(message => {
-      // cancel 函数用来改变 promise 状态
       if (this.reason) return
       this.reason = new Cancel(message)
       resolvePromise(this.reason)

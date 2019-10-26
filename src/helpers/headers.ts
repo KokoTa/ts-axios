@@ -5,7 +5,7 @@ import { Method } from './../types/index'
 import { isPlainObject, deepMerge } from './util'
 
 /**
- * 规范请求头名称(规范大小写)
+ * 规范大小写
  * @param headers 请求头对象
  * @param normalizedName 请求头名称
  */
@@ -20,7 +20,7 @@ function normalizeHeaderName(headers: any, normalizedName: string): void {
 }
 
 /**
- * 规范化请求头
+ * 定义 Content-Type
  * @param data 发送的数据
  * @param headers 请求头对象
  */

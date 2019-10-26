@@ -9,9 +9,9 @@ const defaults: AxiosRequestConfig = {
     // 基本头信息(各个请求类型都会有的头信息)
     common: {
       Accept: 'application/json, text/plain, */*'
-    },
+    }
     // 其他信息
-    test: '123456'
+    // test: '123456'
   },
   // 请求前处理数据
   transformRequest: [

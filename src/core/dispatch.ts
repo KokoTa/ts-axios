@@ -1,6 +1,6 @@
-import { AxiosRequestConfig, AxiosPromise } from '../types/index'
+import { AxiosRequestConfig, AxiosPromise, Method } from '../types/index'
 import xhr from './xhr'
-import { buildURL, isAbsoluteURL, combineURL, transformURL } from '../helpers/url'
+import { transformURL } from '../helpers/url'
 import { flatterHeaders } from '../helpers/headers'
 import transform from './transform'
 
@@ -21,10 +21,18 @@ function throwErrorIfCancelTokenUsed(config: AxiosRequestConfig) {
 function dispatch(config: AxiosRequestConfig): AxiosPromise {
   throwErrorIfCancelTokenUsed(config)
   processConfig(config)
-  return xhr(config).then(res => {
-    res.data = transform(res.data, res.headers, res.config.transformResponse) // 根据函数改变 data 和 headers
-    return res
-  })
+  return xhr(config).then(
+    res => {
+      res.data = transform(res.data, res.headers, res.config.transformResponse) // 根据函数改变 data 和 headers
+      return res
+    },
+    e => {
+      if (e && e.response) {
+        e.response.data = transform(e.response.data, {}, e.config.transformResponse)
+      }
+      return Promise.reject(e)
+    }
+  )
 }
 
 export default dispatch
